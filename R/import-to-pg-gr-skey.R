@@ -362,14 +362,15 @@ import_to_pg_gr_skey <- function(
         ####################
         sql <- glue("select {overlap_group_fields} from {dst_schema}.{dst_tbl} group by {overlap_group_fields}" )
         overlap_groups_df <-  dadmtools::sql_to_df(sql,pg_conn_param)
-        add_quotes <- function(x) {
+		add_quotes <- function(x) {
           if (is.character(x)) {
             return(paste0("'", x, "'"))  # Add single quotes
           }
           return(x)  # Keep numeric values as is
         }
         # Apply function to all elements of the dataframe
-        overlap_groups_df <- as.data.frame(lapply(overlap_groups_df, function(col) sapply(col, add_quotes)), stringsAsFactors = FALSE)
+        #overlap_groups_df <- as.data.frame(lapply(overlap_groups_df, function(col) sapply(col, add_quotes)), stringsAsFactors = FALSE)
+		overlap_groups_df <- as.data.frame(lapply(overlap_groups_df, function(col) lapply(col, add_quotes)), stringsAsFactors = FALSE)
 
         for (i in 1:nrow(overlap_groups_df)) {
           row <- overlap_groups_df[i, ,drop = FALSE]  # Get the row as a dataframe
