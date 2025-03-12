@@ -51,6 +51,8 @@ rasterize_terra <- function(src_sf,
   print(glue("Writing raster: {dest_tif} using datatype: {datatype}"))
   terra::writeRaster(rast_band, dest_tif, datatype = datatype, overwrite = TRUE, NAflag = nodata)
   print('Raster created successfully.')
+  #--Clean up any temp raster files created.  This can buildup when doing an overlap process
+  terra::tmpFiles(remove=TRUE)
   return(dest_tif)
 }
 
